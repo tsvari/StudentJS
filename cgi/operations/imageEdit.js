@@ -2,22 +2,26 @@ var http = require('http');
 var fs = require('fs');
 var url = require('url');
 
-http.createServer(function(req, res){
+http.createServer(function (req, res) {
     var infoFromURL = url.parse(req.url, true).query;
+    console.log(infoFromURL); //
 
+    var newArray = JSON.parse(infoFromURL.edit);
+    console.log(newArray); //
     var filePathLocation = "../../data/data.json";
     try {
         if (fs.existsSync(filePathLocation)) {
             fs.readFile(filePathLocation, function(err, data) {
-                console.log("delete"); //
+                console.log("edit"); //
                 var dataArray = JSON.parse(data);
-                var infoNumber = infoFromURL.number;
+                console.log(dataArray); //
         
                 for (var i=0; i<dataArray.length; i++) {
-                    if (dataArray[i].uid == infoNumber) {
-                        dataArray.splice(i, 1);
+                    if (dataArray[i].uid == newArray.uid) {
+                        dataArray[i] = newArray;
                     }
                 }
+                console.log(dataArray); //
                 fs.writeFileSync(filePathLocation, JSON.stringify(dataArray));
         
                 res.writeHead(200, {"Access-Control-Allow-Origin" : "*"});
@@ -30,10 +34,7 @@ http.createServer(function(req, res){
             return res.end();
         }
     } catch (error) {
-        console.log(error);
+        console.log(error); //
     }
-}).listen(8387);
-console.log('Server started on localhost:8387; press Ctrl-C to terminate...!');
-/*
-    file:///home/givi/Desktop/DEV/ajax/image.html
-*/
+}).listen(8386);
+console.log('Server running at http://127.0.0.1:8386/');

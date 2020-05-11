@@ -23,8 +23,10 @@
             var xhttp = new XMLHttpRequest();
             var tbl = document.createElement('table');
             var mainArray = [];
+            var currentRow;
 
             function onStart() {
+                document.getElementById("formDiv").style.display = "none";
                 var url = "http://localhost:8388/?";
                 xhttp.open("GET", url, true);
 
@@ -83,16 +85,10 @@
             }
 
             function onClickEdit(row) {
-                var url = "http://localhost:8387/?";
-                var param = "number=" + "OBJECT";
-                xhttp.open("GET", url + param, true);
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        mainArray = JSON.parse(this.responseText);
-                        fillTable();
-                    }
-                }
-                xhttp.send();
+                document.getElementById("nameInputId").value = mainArray[row].name;
+                document.getElementById("formDiv").style.display = "block";
+                document.getElementById("imageDiv").style.display = "none";
+                currentRow = row;
             }
 
             function onClickDelete(row) {
@@ -107,11 +103,36 @@
                 }
                 xhttp.send();
             }
+
+            function onClickSendInfoAfterEdit() {
+                document.getElementById("formDiv").style.display = "none";
+                document.getElementById("imageDiv").style.display = "block";
+                //
+                var newArray = mainArray[currentRow];
+                newArray.name = document.getElementById("nameInputId").value;
+                document.getElementById("nameInputId").value = "";
+                var url = "http://localhost:8386/?";
+                var param = "edit=" + JSON.stringify(newArray);
+                xhttp.open("GET", url + param, true);
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        mainArray = JSON.parse(this.responseText);
+                        fillTable();
+                    }
+                }
+                xhttp.send();
+            }
         </script>
     </head>
     <body onload="onStart()">
         <p id="error"> <!-- / --> </p>
-        <div id="imageDiv"> <button id="addButton" onclick="addNewRow()">Add New</button><!-- / --> </div>
+        <div id="imageDiv">
+            <button id="addButton" onclick="addNewRow()">Add New</button>
+        </div>
+        <div id="formDiv">
+            <input type="text" id="nameInputId">
+            <button id="afterEditButton" onclick="onClickSendInfoAfterEdit()">Submit</button>
+        </div>
     </body>
 </html>
 <!-- file:///home/givi/dev/StudentJS/www/index.htm -->

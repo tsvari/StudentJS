@@ -24,7 +24,7 @@
             var tbl = document.createElement('table');
             var mainArray = [];
             var currentRow;
-            var currentFunction;
+            var addOrEditMode;
 
             function onStart() {
                 document.getElementById("formDiv").style.display = "none";
@@ -76,16 +76,14 @@
             }
 
             function addNew() {
-                currentFunction = "add";
-                document.getElementById("formDiv").style.display = "block";
-                document.getElementById("imageDiv").style.display = "none";
+                addOrEditMode = "add";
+                hideShowBeforeSubmit();
             }
 
             function onClickEdit(row) {
-                currentFunction = "edit";
+                addOrEditMode = "edit";
+                hideShowBeforeSubmit();
                 document.getElementById("nameInputId").value = mainArray[row].name;
-                document.getElementById("formDiv").style.display = "block";
-                document.getElementById("imageDiv").style.display = "none";
                 currentRow = row;
             }
 
@@ -103,12 +101,9 @@
             }
 
             function sendInfoAfterEdit() {
-                document.getElementById("formDiv").style.display = "none";
-                document.getElementById("imageDiv").style.display = "block";
-                //
                 var newArray = mainArray[currentRow];
                 newArray.name = document.getElementById("nameInputId").value;
-                document.getElementById("nameInputId").value = "";
+                hideShowAfterSubmit();
                 var url = "http://localhost:8386/?";
                 var param = "edit=" + JSON.stringify(newArray);
                 xhttp.open("GET", url + param, true);
@@ -122,19 +117,15 @@
             }
 
             function sendInfoAfterAdd() {
-                document.getElementById("formDiv").style.display = "none";
-                document.getElementById("imageDiv").style.display = "block";
-                var newArray = mainArray[0];
-                newArray.uid = -1;
-                newArray.name = document.getElementById("nameInputId").value;
-                document.getElementById("nameInputId").value = "";
+                var newArray = {"uid":-1,"name":document.getElementById("nameInputId").value,"img":"1.jpg"};
+
+                hideShowAfterSubmit();
                 var url = "http://localhost:8385/?";
                 var param = "addNew=" + JSON.stringify(newArray);
                 xhttp.open("GET", url + param, true);
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
                         mainArray = JSON.parse(this.responseText);
-                        alert(newArray.img);
                         fillTable();
                     }
                 }
@@ -142,11 +133,23 @@
             }
 
             function onClickSubmitButton() {
-                if (currentFunction = "add") {
+                if (addOrEditMode == "add") {
                     sendInfoAfterAdd();
                 } else {
                     sendInfoAfterEdit()
                 }
+            }
+
+            function hideShowBeforeSubmit() {
+                document.getElementById("formDiv").style.display = "block";
+                document.getElementById("imageDiv").style.display = "none";
+                document.getElementById("nameInputId").value = "";
+            }
+
+            function hideShowAfterSubmit() {
+                document.getElementById("formDiv").style.display = "none";
+                document.getElementById("imageDiv").style.display = "block";
+                document.getElementById("nameInputId").value = "";
             }
         </script>
     </head>

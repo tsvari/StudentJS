@@ -23,8 +23,12 @@
             var xhttp = new XMLHttpRequest();
             var tbl = document.createElement('table');
             var mainArray = [];
+            var currentRow;
+            var addOrEditMode;
 
             function onStart() {
+                document.getElementById("formDiv").style.display = "none";
+                document.getElementById("addFormDiv").style.display = "none";
                 var url = "http://localhost:8388/?";
                 xhttp.open("GET", url, true);
 
@@ -71,28 +75,16 @@
                 document.getElementById('imageDiv').appendChild(tbl);
             }
 
-            function addNew(newRow) {
-                var param = "addNew=" + "OBJECT";
-                xhttp.open("GET", url + param, true);
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        //
-                    }
-                }
-                xhttp.send();
+            function addNew() {
+                addOrEditMode = "add";
+                hideShowBeforeSubmit();
             }
 
             function onClickEdit(row) {
-                var url = "http://localhost:8387/?";
-                var param = "number=" + "OBJECT";
-                xhttp.open("GET", url + param, true);
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        mainArray = JSON.parse(this.responseText);
-                        fillTable();
-                    }
-                }
-                xhttp.send();
+                addOrEditMode = "edit";
+                hideShowBeforeSubmit();
+                document.getElementById("nameInputId").value = mainArray[row].name;
+                currentRow = row;
             }
 
             function onClickDelete(row) {
@@ -107,11 +99,72 @@
                 }
                 xhttp.send();
             }
+
+            function sendInfoAfterEdit() {
+                var newArray = mainArray[currentRow];
+                newArray.name = document.getElementById("nameInputId").value;
+                hideShowAfterSubmit();
+                var url = "http://localhost:8386/?";
+                var param = "edit=" + JSON.stringify(newArray);
+                xhttp.open("GET", url + param, true);
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        mainArray = JSON.parse(this.responseText);
+                        fillTable();
+                    }
+                }
+                xhttp.send();
+            }
+
+            function sendInfoAfterAdd() {
+                var newArray = {"uid":-1,"name":document.getElementById("nameInputId").value,"img":"1.jpg"};
+
+                hideShowAfterSubmit();
+                var url = "http://localhost:8385/?";
+                var param = "addNew=" + JSON.stringify(newArray);
+                xhttp.open("GET", url + param, true);
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        mainArray = JSON.parse(this.responseText);
+                        fillTable();
+                    }
+                }
+                xhttp.send();
+            }
+
+            function onClickSubmitButton() {
+                if (addOrEditMode == "add") {
+                    sendInfoAfterAdd();
+                } else {
+                    sendInfoAfterEdit()
+                }
+            }
+
+            function hideShowBeforeSubmit() {
+                document.getElementById("formDiv").style.display = "block";
+                document.getElementById("imageDiv").style.display = "none";
+                document.getElementById("nameInputId").value = "";
+            }
+
+            function hideShowAfterSubmit() {
+                document.getElementById("formDiv").style.display = "none";
+                document.getElementById("imageDiv").style.display = "block";
+                document.getElementById("nameInputId").value = "";
+            }
         </script>
     </head>
     <body onload="onStart()">
         <p id="error"> <!-- / --> </p>
-        <div id="imageDiv"> <button id="addButton" onclick="addNewRow()">Add New</button><!-- / --> </div>
+        <div id="imageDiv">
+            <button id="addButton" onclick="addNew()">Add New</button>
+        </div>
+        <div id="formDiv">
+            <input type="text" id="nameInputId">
+            <button id="afterEditButton" onclick="onClickSubmitButton()">Submit</button>
+        </div>
+        <div id ="addFormDiv">
+            <!-- / -->
+        </div>
     </body>
 </html>
 <!-- file:///home/givi/dev/StudentJS/www/index.htm -->

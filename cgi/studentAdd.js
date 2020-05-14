@@ -1,8 +1,8 @@
 const http = require('http');
 const fs = require('fs');
 const url = require('url');
-const generatorIdModule = require('./logger.js');
-const filePathLocation = "../../data/data.json";
+const generatorIdModule = require('./modules/logger.js');
+const filePathLocation = "../data/data.json";
 
 http.createServer(function (req, res) {
     var infoFromURL = url.parse(req.url, true).query;

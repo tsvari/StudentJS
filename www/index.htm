@@ -44,7 +44,7 @@
                 tbl.innerHTML = "";
                 for (var i = 0; i < mainArray.length; i++)  {
                     var row = document.createElement("tr");
-                    for (var j = 0; j < 5; j++) {
+                    for (var j = 0; j < 6; j++) {
                         var cell = document.createElement("td");
                         var cellText = "";
                         if (j == 0) {
@@ -54,16 +54,20 @@
                             cellText = mainArray[i].name;
                             cell.innerHTML = cellText;
                         } else if (j == 2) {
+                            var phoneNumber = mainArray[i].phone;
+                            cellText = "<a href=\"file:///home/givi/dev/StudentJS/www/phoneInfo.htm\">" + phoneNumber + "</a>"
+                            cell.innerHTML = cellText;
+                        } else if (j == 3) {
                             var image = document.createElement("img");
                             image.alt = "Image";
                             image.width = "150";
                             image.height = "100";
                             image.src = "http://localhost:8384/?img=" + mainArray[i].img;
                             cell.appendChild(image);
-                        } else if (j == 3) {
+                        } else if (j == 4) {
                             cellText = "<button onclick=\"onClickDelete(" + i + ")\">Delete</button>";
                             cell.innerHTML = cellText;
-                        } else if (j == 4) {
+                        } else if (j == 5) {
                             cellText = "<button onclick=\"onClickEdit(" + i + ")\">Edit</button>";
                             cell.innerHTML = cellText;
                         }

@@ -1,10 +1,30 @@
 var express = require('express');
 var app = express();
 var path = require('path');
+var fs = require('fs');
 
 // viewed at http://localhost:8080
 app.get('/', function(req, res) {
-    res.sendFile(path.join('/home/tsvari/dev/nodeJS/StudentJS/www/index.htm'));
+	var indexFilePath = path.join(__dirname, "../www", "index.htm"); 
+	fs.access(indexFilePath, fs.F_OK, (err) => {
+		if (err) {
+			console.error(err);
+			res.send("Error to finding index file");
+		return;
+		}
+		//file exists
+		res.sendFile(indexFilePath);
+	})
+	// or use this 
+	/*
+	try {
+		if (fs.existsSync(path)) {
+		//file exists
+		}
+	} catch(err) {
+		console.error(err)
+	}
+	*/
 });
 
 app.listen(8080);

@@ -1,1 +1,44 @@
-[{"uid":1,"name":"BugzFN","phone":"11","img":"1.jpg"},{"uid":2,"name":"ProofFN","phone":"22","img":"2.jpg"},{"uid":3,"name":"BizarreFN","phone":"33","img":"3.jpg"},{"uid":3,"name":"EminemFN","phone":"44","img":"4.jpg"},{"uid":5,"name":"KunivaFN","phone":"55","img":"5.jpg"},{"uid":6,"name":"DeaunPorterFN","phone":"66","img":"6.jpg"}]
+[
+    {
+        "uid":1,
+        "name":"BugzFN",
+        "phone":"11",
+        "img":"1.jpg",
+        "morePhones":"y"
+    },
+    {
+        "uid":2,
+        "name":"ProofFN",
+        "phone":"22",
+        "img":"2.jpg",
+        "morePhones":"y"
+    },
+    {
+        "uid":3,
+        "name":"BizarreFN",
+        "phone":"33",
+        "img":"3.jpg",
+        "morePhones":"n"
+    },
+    {
+        "uid":4,
+        "name":"EminemFN",
+        "phone":"44",
+        "img":"4.jpg",
+        "morePhones":"y"
+    },
+    {
+        "uid":5,
+        "name":"KunivaFN",
+        "phone":"55",
+        "img":"5.jpg",
+        "morePhones":"n"
+    },
+    {
+        "uid":6,
+        "name":"DeaunPorterFN",
+        "phone":"66",
+        "img":"6.jpg",
+        "morePhones":"y"
+    }
+]

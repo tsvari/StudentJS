@@ -20,11 +20,33 @@
             }
         </style>
         <script>
+
+            // 8385 - studentAdd.js;
+            // 8088 - selectPhone.js;
+            // 8390 - studentDelete.js;
+            // 8386 - studentEdit.js;
+            // 8388 - select.js;
+            // 8080 - index.js;
+            // 8091 - indexPhone.js;
+            // 8384 - image.js;
+
+            // ---------------------------------------------------------------------------GLOBAL VARIABLES
+
+            // All
+
             var xhttp = new XMLHttpRequest();
+
+            // Users
+
             var tbl = document.createElement('table');
             var mainArray = [];
             var currentRow;
             var addOrEditMode;
+
+            // Phone
+
+            var mainPhoneArray;
+            var phoneTable = document.createElement('table');
 
             function onStart() {
                 document.getElementById("formDiv").style.display = "none";
@@ -40,6 +62,9 @@
                 xhttp.send();
             }
 
+            // ---------------------------------------------------------------------------USER FUNCTIONS
+
+            // --------------FILL USER TABLE FUNCTION
             function fillTable() {
                 tbl.innerHTML = "";
                 for (var i = 0; i < mainArray.length; i++)  {
@@ -54,10 +79,15 @@
                             cellText = mainArray[i].name;
                             cell.innerHTML = cellText;
                         } else if (j == 2) {
-                            var phoneNumber = mainArray[i].phone;
-                            cellText = "<a href=\"file:///home/givi/dev/StudentJS/www/phoneInfo.htm\">" + phoneNumber + "</a>"
-                            cell.innerHTML = cellText;
-                        } else if (j == 3) {
+                            if (mainArray[i].morePhones == "y") {
+                                cellText = "<a href=\"http://localhost:8091/?studentUid=" + mainArray[i].uid + "\">" + mainArray[i].phone + "</p>";
+                                cell.innerHTML = cellText;
+                            } else {
+                                cellText = mainArray[i].phone;
+                                cell.innerHTML = cellText;
+                            }
+                        }
+                        if (j == 3) {
                             var image = document.createElement("img");
                             image.alt = "Image";
                             image.width = "150";
@@ -78,11 +108,13 @@
                 document.getElementById('imageDiv').appendChild(tbl);
             }
 
+            // --------------AFTER CLICKED ON ADD FUNCTION
             function addNew() {
                 addOrEditMode = "add";
                 hideShowBeforeSubmit();
             }
 
+            // --------------AFTER CLICKED ON EDIT FUNCTION
             function onClickEdit(row) {
                 addOrEditMode = "edit";
                 hideShowBeforeSubmit();
@@ -90,8 +122,9 @@
                 currentRow = row;
             }
 
+            // --------------AFTER CLICKED ON DELETE FUNCTION
             function onClickDelete(row) {
-                var url = "http://localhost:8387/?";
+                var url = "http://localhost:8390/?";
                 var param = "number=" + mainArray[row].uid;
                 xhttp.open("GET", url + param, true);
                 xhttp.onreadystatechange = function() {
@@ -103,6 +136,7 @@
                 xhttp.send();
             }
 
+            // -------------SEND INFORMATION AFTER EDIT FUNCTION
             function sendInfoAfterEdit() {
                 var newArray = mainArray[currentRow];
                 newArray.name = document.getElementById("nameInputId").value;
@@ -119,6 +153,7 @@
                 xhttp.send();
             }
 
+            // -------------SEND INFORMATION AFTER ADD FUNCTION
             function sendInfoAfterAdd() {
                 var newArray = {"uid":-1,"name":document.getElementById("nameInputId").value,"img":"1.jpg"};
 
@@ -135,20 +170,23 @@
                 xhttp.send();
             }
 
+            // --------------AFTER CLICKED ON SUBMIT FUNCTION
             function onClickSubmitButton() {
                 if (addOrEditMode == "add") {
                     sendInfoAfterAdd();
                 } else {
-                    sendInfoAfterEdit()
+                    sendInfoAfterEdit();
                 }
             }
 
+            // --------------HIDE OR SHOW BEFORE SUBMITTED FUNCTION
             function hideShowBeforeSubmit() {
                 document.getElementById("formDiv").style.display = "block";
                 document.getElementById("imageDiv").style.display = "none";
                 document.getElementById("nameInputId").value = "";
             }
 
+            // --------------HIDE OR SHOW AFTER SUBMITTED FUNCTION
             function hideShowAfterSubmit() {
                 document.getElementById("formDiv").style.display = "none";
                 document.getElementById("imageDiv").style.display = "block";
@@ -165,6 +203,57 @@
             <input type="text" id="nameInputId">
             <button id="afterEditButton" onclick="onClickSubmitButton()">Submit</button>
         </div>
+        <div id="phoneTableDiv"> <!-- / --> </div>
     </body>
 </html>
+
 <!-- file:///home/givi/dev/StudentJS/www/index.htm -->
+
+<!--
+
+    [
+        {
+            "uid":1,
+            "name":"BugzFN",
+            "phone":"11",
+            "img":"1.jpg",
+            "morePhones":"y"
+        },
+        {
+            "uid":2,
+            "name":"ProofFN",
+            "phone":"22",
+            "img":"2.jpg",
+            "morePhones":"y"
+        },
+        {
+            "uid":3,
+            "name":"BizarreFN",
+            "phone":"33",
+            "img":"3.jpg",
+            "morePhones":"n"
+        },
+        {
+            "uid":4,
+            "name":"EminemFN",
+            "phone":"44",
+            "img":"4.jpg",
+            "morePhones":"y"
+        },
+        {
+            "uid":5,
+            "name":"KunivaFN",
+            "phone":"55",
+            "img":"5.jpg",
+            "morePhones":"n"
+        },
+        {
+            "uid":6,
+            "name":"DeaunPorterFN",
+            "phone":"66",
+            "img":"6.jpg",
+            "morePhones":"y"
+        }
+    ]
+
+-->

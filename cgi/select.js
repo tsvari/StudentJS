@@ -1,11 +1,12 @@
-var http = require('http');
-var fs = require('fs');
-var url = require('url');
-
-var filePathLocation = "../data/data.json";
+const http = require('http');
+const fs = require('fs');
+const url = require('url');
 
 http.createServer(function (req, res) {
     var infoFromURL = url.parse(req.url, true).query;
+    var filePathLocation = "../data/data.json";
+    console.log("select"); //
+
     res.writeHead(200, {'Content-Type': 'text/html'});
     res.writeHead(200, {"Access-Control-Allow-Origin" : "*"});
     try {

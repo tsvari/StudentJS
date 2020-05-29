@@ -1,10 +1,11 @@
-var express = require('express');
-var app = express();
-var path = require('path');
+const express = require('express');
+const app = express();
+const path = require('path');
 
 // viewed at http://localhost:8080
 app.get('/', function(req, res) {
-    res.sendFile(path.join('/home/tsvari/dev/nodeJS/StudentJS/www/index.htm'));
+    console.log("index"); //
+    res.sendFile(path.join('/home/givi/dev/StudentJS/www/index.htm'));
 });
 
 app.listen(8080);

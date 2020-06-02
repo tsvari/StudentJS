@@ -6,7 +6,6 @@ const imagePath = "../img/";
 const noImageFile = imagePath + "noImage.png";
 
 http.createServer(function (req, res) {
-    // console.log("sentInfo: " + JSON.stringify(infoFromURL)); //
     console.log("image"); //
     var infoFromURL = url.parse(req.url, true).query;
     res.writeHead(200, {"Access-Control-Allow-Origin" : "*"});
@@ -27,9 +26,9 @@ http.createServer(function (req, res) {
             return res.end();
         }
     } catch (error) {
-        console.log("error: " + error);
+        console.log("error: " + error); //
     }
 }).listen(8384);
-console.log('Server running at http://127.0.0.1:8384/');
+console.log('Server running at http://127.0.0.1:8384/'); //
 
 // http://localhost:8384/?img=1.jpg or noimage.jpg

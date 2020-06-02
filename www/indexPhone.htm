@@ -35,6 +35,8 @@
             // 8091 - indexPhone.js;
             // 8384 - image.js;
 
+            // mainArray.splice(iValue, 1);
+
             var xhttp = new XMLHttpRequest();
             var tbl = document.createElement('table');
             var mainArray = [];
@@ -83,9 +85,7 @@
             }
             
             function onClickDelete(iValue) {
-                /*
-                    confirmFunc(iValue);
-                */
+                confirmFunc(iValue);
             }
 
             function onClickEdit (iValue) {
@@ -105,20 +105,19 @@
             }
 
             function confirmFunc(iValue) {
-                /*
-                    if (confirm("Press a button!")) {
-                        var url = "http://localhost:8390/?";
-                        var param = "phoneNumber3523=" + mainArray;
-                        xhttp.open("GET", url + param, true);
-                        xhttp.onreadystatechange = function() {
-                            if (this.readyState == 4 && this.status == 200) {
-                                mainArray = JSON.parse(this.responseText);
-                                fillTable();
-                            }
+                if (confirm("Are you sure you want to delete this?")) {
+                    var url = "http://localhost:8390/?";
+                    mainArray.splice(iValue, 1);
+                    alert(mainArray);
+                    var param = "phoneNumber3523=" + JSON.stringify(mainArray);
+                    xhttp.open("GET", url + param, true);
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            fillTable();
                         }
-                        xhttp.send();
-                    } else {}
-                */
+                    }
+                    xhttp.send();
+                } else {}
             }
 
             function onClickAdd() {

@@ -11,7 +11,7 @@ http.createServer(function (req, res) {
             fs.readFile(filePathLocation, function(err, data) {
                 console.log("edit"); //
                 var dataArray = JSON.parse(data);
-                for (var i=0; i<dataArray.length; i++) {
+                for (var i = 0; i < dataArray.length; i++) {
                     if (dataArray[i].uid == newArray.uid) {
                         dataArray[i] = newArray;
                     }

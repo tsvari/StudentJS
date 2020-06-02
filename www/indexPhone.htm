@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            table {
+                border-collapse: collapse;
+                border: 1px solid #dddddd;
+            }
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+            table tr:hover {
+                background-color: #00ffff8a;
+            }
+            table td:hover {
+                background-color: #00ffff8a;
+                text-emphasis-color: #00ffff8a;
+            }
+            .link {
+                color:blue;
+                text-decoration:underline;
+                cursor:pointer;
+            }
+        </style>
+        <script>
+
+            // 8385 - studentAdd.js;
+            // 8088 - selectPhone.js;
+            // 8390 - studentDelete.js;
+            // 8386 - studentEdit.js;
+            // 8388 - select.js;
+            // 8080 - index.js;
+            // 8091 - indexPhone.js;
+            // 8384 - image.js;
+
+            var xhttp = new XMLHttpRequest();
+            var tbl = document.createElement('table');
+            var mainArray = [];
+            var currentRow;
+
+            function onStart() {
+                document.getElementById("formDiv").style.display = "none";
+                var url = "http://localhost:8088/?studentUid=@uidNumberHere";
+                xhttp.open("GET", url, true);
+
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        mainArray = JSON.parse(this.responseText);
+                        fillTable();
+                    }
+                };
+                xhttp.send();
+            }
+
+            function fillTable() {
+                tbl.innerHTML = "";
+
+                //
+
+                for (var i = 1; i < mainArray.length; i++)  {
+                    var row = document.createElement("tr");
+                    for (var j = -2; j < 1; j++) {
+                        var cell = document.createElement("td");
+                        var cellText;
+                        if (j == -2) {
+                            cellText = "<button onclick=\"onClickDelete(" + i + ")\">Delete</button>";
+                            cell.innerHTML = cellText;
+                        } else if (j == -1) {
+                            cellText = "<button onclick=\"onClickEdit(" + i + ")\">Edit</button>";
+                            cell.innerHTML = cellText;
+                        } else if (j == 0) {
+                            var phoneNumber = mainArray[i];
+                            cellText = phoneNumber;
+                            cell.innerHTML = cellText;
+                        }
+                        row.appendChild(cell);
+                    }
+                    tbl.appendChild(row);
+                }
+                document.getElementById('imageDiv').appendChild(tbl);
+            }
+            
+            function onClickDelete(iValue) {
+                /*
+                    confirmFunc(iValue);
+                */
+            }
+
+            function onClickEdit (iValue) {
+                /*
+                    currentRow = iValue;
+                    document.getElementById("formDiv").style.display = "block";
+                    document.getElementById("imageDiv").style.display = "none";
+
+                    for (var i = 0; i < mainArray[iValue].length - 1; i++) {
+                        var iPlus1 = i + 1;
+                        var addText = "<p>phone " + iPlus1 + ": <input type\"text\" id=\"phone" + iPlus1 + "\" value=\"" + mainArray[iValue][iPlus1] + "\"></p>";
+                        document.getElementById("formDiv").innerHTML = document.getElementById("formDiv").innerHTML + addText;
+                    }
+                    var addText = "<button onclick=\"onSubmit()\">Submit</button>";
+                    document.getElementById("formDiv").innerHTML = document.getElementById("formDiv").innerHTML + addText;
+                */
+            }
+
+            function confirmFunc(iValue) {
+                /*
+                    if (confirm("Press a button!")) {
+                        var url = "http://localhost:8390/?";
+                        var param = "phoneNumber3523=" + mainArray;
+                        xhttp.open("GET", url + param, true);
+                        xhttp.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                mainArray = JSON.parse(this.responseText);
+                                fillTable();
+                            }
+                        }
+                        xhttp.send();
+                    } else {}
+                */
+            }
+
+            function onClickAdd() {
+                /*
+                    //
+                */
+            }
+
+            function onSubmit() {
+                /*
+                    for (var i = 0; i < mainArray[currentRow].length; i++) {
+                        var iPlus1 = i + 1;
+                        mainArray[currentRow][iPlus1] = document.getElementById("phone" + iPlus1);
+                    }
+                    var url = "http://localhost:8386/?";
+                    var param = "phoneNumber3523=" + mainArray;
+                    xhttp.open("GET", url + param, true);
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            mainArray = JSON.parse(this.responseText);
+                            fillTable();
+                        }
+                    }
+                    xhttp.send();
+                */
+            }
+        </script>
+    </head>
+    <body onload="onStart()">
+        <h3><a href="http://localhost:8080/">BACK</a></h3>
+        <p id="error"></p>
+        <div id="imageDiv">
+            <button onclick="onClickAdd()">Add New</button><br>
+        </div>
+        <div id="formDiv"></div>
+    </body>
+
+</html>
+<!-- file:///home/givi/dev/StudentJS/www/indexPhone.htm -->
+
+<!--
+
+    [
+        [
+            1,
+            "11",
+            "11",
+            "11"
+        ],
+        [
+            2,
+            "22",
+            "22"
+        ],
+        [
+            3,
+            "33"
+        ],
+        [
+            4,
+            "44",
+            "44"
+        ],
+        [
+            5,
+            "55"
+        ],
+        [
+            6,
+            "66",
+            "66"
+        ]
+    ]
+
+-->

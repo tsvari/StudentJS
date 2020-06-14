@@ -1,7 +1,6 @@
 const http = require('http');
 const fs = require('fs');
 const url = require('url');
-// ToDo: if first one is changed change it in data.json as well;
 
 http.createServer(function (req, res) {
     var infoFromURL = url.parse(req.url, true).query;
@@ -119,3 +118,4 @@ http.createServer(function (req, res) {
     }
 }).listen(8386);
 console.log('Server running at http://127.0.0.1:8386/'); //
+// 122 / 123

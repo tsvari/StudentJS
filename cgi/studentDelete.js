@@ -7,17 +7,25 @@ http.createServer(function (req, res) {
     var filePathLocation = "../data/data.json";
     try {
         if (JSON.stringify(infoFromURL).includes("phoneNumber3523")) {
-            console.log("PHONE"); //
+            console.log("PHONE"); //    
             var arraySentFromClient = JSON.parse(infoFromURL.phoneNumber3523);
             filePathLocation = "../data/phone.json";
             if (fs.existsSync(filePathLocation)) {
                 fs.readFile("../data/data.json", function (err, data) {
                     console.log("delete person"); //
+                    var currentIValue = JSON.parse(infoFromURL.iValueCurrent);
                     var dataArray = JSON.parse(data);
                     for (var i = 0; i < dataArray.length; i++) {
                         if (dataArray[i].uid == arraySentFromClient[0]) {
                             if (arraySentFromClient[1] != "") {
                                 dataArray[i].phone = arraySentFromClient[1];
+                                if (arraySentFromClient.length == 1 || arraySentFromClient.length == 2) {
+                                    dataArray[i].secondPhone = null;
+                                    dataArray[i].morePhones = "n";
+                                } else {
+                                    dataArray[i].secondPhone = arraySentFromClient[2];
+                                    dataArray[i].morePhones = "y";
+                                }
                             } else {
                                 dataArray[i].phone = "";
                             }
@@ -60,7 +68,7 @@ http.createServer(function (req, res) {
                     }
                     fs.writeFileSync("../data/phone.json", JSON.stringify(dataArray));
                 });
-                //
+
                 fs.readFile(filePathLocation, function (err, data) {
                     console.log("delete person"); //
                     var dataArray = JSON.parse(data);
@@ -86,3 +94,4 @@ http.createServer(function (req, res) {
     }
 }).listen(8390);
 console.log('Server started on localhost:8387; press Ctrl-C to terminate...!'); //
+// 99 / 98

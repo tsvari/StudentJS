@@ -1,210 +1,261 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            table {
-                border-collapse: collapse;
-                border: 1px solid #dddddd;
+
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            border: 1px solid #dddddd;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        table tr:hover {
+            background-color: #00ffff8a;
+        }
+
+        table td:hover {
+            background-color: #00ffff8a;
+            text-emphasis-color: #00ffff8a;
+        }
+
+        .image {
+            opacity: 1;
+            transition: .4s ease;
+            backface-visibility: hidden;
+        }
+
+        .image:hover {
+            background-color: black;
+        }
+
+        .image2 {
+            opacity: 1;
+            transition: .4s ease;
+            backface-visibility: hidden;
+        }
+
+        .image2:hover {
+            background-color: cyan;
+        }
+    </style>
+    <script>
+
+        // 8385 - studentAdd.js;
+        // 8088 - selectPhone.js;
+        // 8390 - studentDelete.js;
+        // 8386 - studentEdit.js;
+        // 8388 - select.js;
+        // 8080 - index.js;
+        // 8091 - indexPhone.js;
+        // 8384 - image.js;
+
+        // ---------------------------------------------------------------------------GLOBAL VARIABLES;
+
+        // All;
+
+        var xhttp = new XMLHttpRequest();
+
+        // Users;
+
+        var tbl = document.createElement('table');
+        var mainArray = [];
+        var currentRow;
+        var addOrEditMode;
+
+        // Phone;
+
+        var mainPhoneArray;
+        var phoneTable = document.createElement('table');
+
+        function onStart() {
+            document.getElementById("formDiv").style.display = "none";
+            var url = "http://localhost:8388/?";
+            xhttp.open("GET", url, true);
+
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    mainArray = JSON.parse(this.responseText);
+                    fillTable();
+                }
+            };
+            xhttp.send();
+        }
+
+        // ---------------------------------------------------------------------------USER FUNCTIONS;
+
+        // --------------FILL USER TABLE FUNCTION;
+        function fillTable() {
+            tbl.innerHTML = "";
+
+            var headerArray = ["UID", "Name", "Phone", "Image", "edit/delete"];
+            var headerRow = document.createElement("tr");
+            for (var i = 0; i < headerArray.length; i++) {
+                var cell = document.createElement("td");
+                var cellText = headerArray[i];
+                cell.innerHTML = cellText;
+                headerRow.appendChild(cell);
             }
-            td, th {
-                border: 1px solid #dddddd;
-                text-align: left;
-                padding: 8px;
-            }
-            table tr:hover {
-                background-color: #00ffff8a;
-            }
-            table td:hover {
-                background-color: #00ffff8a;
-                text-emphasis-color: #00ffff8a;
-            }
-        </style>
-        <script>
+            tbl.appendChild(headerRow);
 
-            // 8385 - studentAdd.js;
-            // 8088 - selectPhone.js;
-            // 8390 - studentDelete.js;
-            // 8386 - studentEdit.js;
-            // 8388 - select.js;
-            // 8080 - index.js;
-            // 8091 - indexPhone.js;
-            // 8384 - image.js;
 
-            // ---------------------------------------------------------------------------GLOBAL VARIABLES
-
-            // All
-
-            var xhttp = new XMLHttpRequest();
-
-            // Users
-
-            var tbl = document.createElement('table');
-            var mainArray = [];
-            var currentRow;
-            var addOrEditMode;
-
-            // Phone
-
-            var mainPhoneArray;
-            var phoneTable = document.createElement('table');
-
-            function onStart() {
-                document.getElementById("formDiv").style.display = "none";
-                var url = "http://localhost:8388/?";
-                xhttp.open("GET", url, true);
-
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        mainArray = JSON.parse(this.responseText);
-                        fillTable();
-                    }
-                };
-                xhttp.send();
-            }
-
-            // ---------------------------------------------------------------------------USER FUNCTIONS
-
-            // --------------FILL USER TABLE FUNCTION
-            function fillTable() {
-                tbl.innerHTML = "";
-                for (var i = 0; i < mainArray.length; i++)  {
-                    var row = document.createElement("tr");
-                    for (var j = 0; j < 6; j++) {
-                        var cell = document.createElement("td");
-                        var cellText = "";
-                        if (j == 0) {
-                            cellText = mainArray[i].uid;
+            for (var i = 0; i < mainArray.length; i++) {
+                var row = document.createElement("tr");
+                for (var j = 0; j < 5; j++) {
+                    var cell = document.createElement("td");
+                    var cellText = "";
+                    if (j == 0) {
+                        cellText = mainArray[i].uid;
+                        cell.innerHTML = cellText;
+                    } else if (j == 1) {
+                        cellText = mainArray[i].name;
+                        cell.innerHTML = cellText;
+                    } else if (j == 2) {
+                        if (mainArray[i].morePhones == "y") {
+                            var secondNumber = mainArray[i].secondPhone[0] + mainArray[i].secondPhone[1];
+                            cellText = "<a href=\"http://localhost:8091/?studentUid=" + mainArray[i].uid + "\">" + mainArray[i].phone + "; " + secondNumber + "...</p>";
                             cell.innerHTML = cellText;
-                        } else if (j == 1) {
-                            cellText = mainArray[i].name;
+                        } else {
+                            cellText = "<a href=\"http://localhost:8091/?studentUid=" + mainArray[i].uid + "\">" + mainArray[i].phone + "; ...</p>";
                             cell.innerHTML = cellText;
-                        } else if (j == 2) {
-                            if (mainArray[i].morePhones == "y") {
-                                cellText = "<a href=\"http://localhost:8091/?studentUid=" + mainArray[i].uid + "\">" + mainArray[i].phone + "</p>";
-                                cell.innerHTML = cellText;
-                            } else {
-                                cellText = mainArray[i].phone;
-                                cell.innerHTML = cellText;
-                            }
                         }
-                        if (j == 3) {
-                            var image = document.createElement("img");
-                            image.alt = "Image";
-                            image.width = "150";
-                            image.height = "100";
-                            image.src = "http://localhost:8384/?img=" + mainArray[i].img;
-                            cell.appendChild(image);
-                        } else if (j == 4) {
-                            cellText = "<button onclick=\"onClickDelete(" + i + ")\">Delete</button>";
-                            cell.innerHTML = cellText;
-                        } else if (j == 5) {
-                            cellText = "<button onclick=\"onClickEdit(" + i + ")\">Edit</button>";
-                            cell.innerHTML = cellText;
-                        }
-                        row.appendChild(cell);
                     }
-                    tbl.appendChild(row);
-                }
-                document.getElementById('imageDiv').appendChild(tbl);
-            }
-
-            // --------------AFTER CLICKED ON ADD FUNCTION
-            function addNew() {
-                addOrEditMode = "add";
-                hideShowBeforeSubmit();
-            }
-
-            // --------------AFTER CLICKED ON EDIT FUNCTION
-            function onClickEdit(row) {
-                addOrEditMode = "edit";
-                hideShowBeforeSubmit();
-                document.getElementById("nameInputId").value = mainArray[row].name;
-                currentRow = row;
-            }
-
-            // --------------AFTER CLICKED ON DELETE FUNCTION
-            function onClickDelete(row) {
-                var url = "http://localhost:8390/?";
-                var param = "number=" + mainArray[row].uid;
-                xhttp.open("GET", url + param, true);
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        mainArray = JSON.parse(this.responseText);
-                        fillTable();
+                    if (j == 3) {
+                        var image = document.createElement("img");
+                        image.alt = "Image";
+                        image.width = "150";
+                        image.height = "100";
+                        image.src = "http://localhost:8384/?img=" + mainArray[i].img + "&type=data";
+                        cell.appendChild(image);
+                    } else if (j == 4) {
+                        cellText = "<p> <img src=\"http://localhost:8384/?img=edit&type=content\" class=\"image\" height=\"30\" size=\"30\" alt=\"edit\" onclick=\"onClickEdit(" + i + ")\"> ";
+                        cellText = cellText + "<img src=\"http://localhost:8384/?img=delete&type=content\" class=\"image\" height=\"30\" size=\"30\" alt=\"del\" onclick=\"onClickDelete(" + i + ")\"></p>";
+                        cell.innerHTML = cellText;
                     }
+                    row.appendChild(cell);
                 }
-                xhttp.send();
+                tbl.appendChild(row);
             }
+            document.getElementById('imageDiv').appendChild(tbl);
+        }
 
-            // -------------SEND INFORMATION AFTER EDIT FUNCTION
-            function sendInfoAfterEdit() {
-                var newArray = mainArray[currentRow];
-                newArray.name = document.getElementById("nameInputId").value;
-                hideShowAfterSubmit();
-                var url = "http://localhost:8386/?";
-                var param = "edit=" + JSON.stringify(newArray);
-                xhttp.open("GET", url + param, true);
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        mainArray = JSON.parse(this.responseText);
-                        fillTable();
-                    }
-                }
-                xhttp.send();
-            }
+        // --------------AFTER CLICKED ON ADD FUNCTION;
+        function addNew() {
+            addOrEditMode = "add";
+            hideShowBeforeSubmit();
+        }
 
-            // -------------SEND INFORMATION AFTER ADD FUNCTION
-            function sendInfoAfterAdd() {
-                var newArray = {"uid":-1,"name":document.getElementById("nameInputId").value,"img":"1.jpg"};
+        // --------------AFTER CLICKED ON EDIT FUNCTION;
+        function onClickEdit(row) {
+            addOrEditMode = "edit";
+            hideShowBeforeSubmit();
 
-                hideShowAfterSubmit();
-                var url = "http://localhost:8385/?";
-                var param = "addNew=" + JSON.stringify(newArray);
-                xhttp.open("GET", url + param, true);
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        mainArray = JSON.parse(this.responseText);
-                        fillTable();
-                    }
-                }
-                xhttp.send();
-            }
+            document.getElementById("nameInputId").value = mainArray[row].name;
+            document.getElementById("phoneInputId").value = mainArray[row].phone;
+            currentRow = row;
+        }
 
-            // --------------AFTER CLICKED ON SUBMIT FUNCTION
-            function onClickSubmitButton() {
-                if (addOrEditMode == "add") {
-                    sendInfoAfterAdd();
-                } else {
-                    sendInfoAfterEdit();
+        // --------------AFTER CLICKED ON DELETE FUNCTION;
+        function onClickDelete(row) {
+            var url = "http://localhost:8390/?";
+            var param = "number=" + mainArray[row].uid;
+            xhttp.open("GET", url + param, true);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    mainArray = JSON.parse(this.responseText);
+                    fillTable();
                 }
             }
+            xhttp.send();
+        }
 
-            // --------------HIDE OR SHOW BEFORE SUBMITTED FUNCTION
-            function hideShowBeforeSubmit() {
-                document.getElementById("formDiv").style.display = "block";
-                document.getElementById("imageDiv").style.display = "none";
-                document.getElementById("nameInputId").value = "";
+        // -------------SEND INFORMATION AFTER EDIT FUNCTION;
+        function sendInfoAfterEdit() {
+            var newArray = mainArray[currentRow];
+            newArray.name = document.getElementById("nameInputId").value;
+            newArray.phone = document.getElementById("phoneInputId").value;
+            hideShowAfterSubmit();
+            var url = "http://localhost:8386/?";
+            var param = "edit=" + JSON.stringify(newArray);
+            xhttp.open("GET", url + param, true);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    mainArray = JSON.parse(this.responseText);
+                    fillTable();
+                }
             }
+            xhttp.send();
+        }
 
-            // --------------HIDE OR SHOW AFTER SUBMITTED FUNCTION
-            function hideShowAfterSubmit() {
-                document.getElementById("formDiv").style.display = "none";
-                document.getElementById("imageDiv").style.display = "block";
-                document.getElementById("nameInputId").value = "";
+        // -------------SEND INFORMATION AFTER ADD FUNCTION;
+        function sendInfoAfterAdd() {
+            var newArray = { "uid": -1, "name": document.getElementById("nameInputId").value, "img": "1.jpg" };
+
+            hideShowAfterSubmit();
+            var url = "http://localhost:8385/?";
+            var param = "addNew=" + JSON.stringify(newArray);
+            xhttp.open("GET", url + param, true);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    mainArray = JSON.parse(this.responseText);
+                    fillTable();
+                }
             }
-        </script>
-    </head>
-    <body onload="onStart()">
-        <p id="error"> <!-- / --> </p>
-        <div id="imageDiv">
-            <button id="addButton" onclick="addNew()">Add New</button>
-        </div>
-        <div id="formDiv">
-            <input type="text" id="nameInputId">
-            <button id="afterEditButton" onclick="onClickSubmitButton()">Submit</button>
-        </div>
-        <div id="phoneTableDiv"> <!-- / --> </div>
-    </body>
+            xhttp.send();
+        }
+
+        // --------------AFTER CLICKED ON SUBMIT FUNCTION;
+        function onClickSubmitButton() {
+            if (addOrEditMode == "add") {
+                sendInfoAfterAdd();
+            } else {
+                sendInfoAfterEdit();
+            }
+        }
+
+        // --------------HIDE OR SHOW BEFORE SUBMITTED FUNCTION;
+        function hideShowBeforeSubmit() {
+            document.getElementById("formDiv").style.display = "block";
+            document.getElementById("imageDiv").style.display = "none";
+            document.getElementById("nameInputId").value = "";
+            document.getElementById("phoneInputId").value = "";
+        }
+
+        // --------------HIDE OR SHOW AFTER SUBMITTED FUNCTION;
+        function hideShowAfterSubmit() {
+            document.getElementById("formDiv").style.display = "none";
+            document.getElementById("imageDiv").style.display = "block";
+            document.getElementById("nameInputId").value = "";
+            document.getElementById("phoneInputId").value = "";
+        }
+
+        //ToDo: 347-803-9648; 56...
+    </script>
+</head>
+
+<body onload="onStart()">
+    <p id="error">
+        <!-- / -->
+    </p>
+    <div id="imageDiv">
+        <img src="http://localhost:8384/?img=add&type=content" class="image2" height="50" size="50" alt="add"
+            onclick="addNew()">
+    </div>
+    <div id="formDiv">
+        <p> name: &nbsp;<input type="text" id="nameInputId"> </p>
+        <p> phone: <input type="text" id="phoneInputId"> (first from the list) </p>
+        <button id="afterEditButton" onclick="onClickSubmitButton()">Submit</button>
+    </div>
+    <div id="phoneTableDiv">
+        <!-- / -->
+    </div>
+</body>
+
 </html>
 
 <!-- file:///home/givi/dev/StudentJS/www/index.htm -->
@@ -213,46 +264,50 @@
 
     [
         {
-            "uid":1,
-            "name":"BugzFN",
-            "phone":"11",
-            "img":"1.jpg",
-            "morePhones":"y"
+            "uid": 1,
+            "name": "BugzFN",
+            "phone": "347-803-9647",
+            "secondPhone": "569-283-4656",
+            "img": "1.jpg",
+            "morePhones": "y"
         },
         {
-            "uid":2,
-            "name":"ProofFN",
-            "phone":"22",
-            "img":"2.jpg",
-            "morePhones":"y"
+            "uid": 2,
+            "name": "ProofFN",
+            "phone": "135-546-5487",
+            "secondPhone": "236-547-5456",
+            "img": "2.jpg",
+            "morePhones": "y"
         },
         {
-            "uid":3,
-            "name":"BizarreFN",
-            "phone":"33",
-            "img":"3.jpg",
-            "morePhones":"n"
+            "uid": 3,
+            "name": "BizarreFN",
+            "phone": "237-457-8658",
+            "img": "3.jpg",
+            "morePhones": "n"
         },
         {
-            "uid":4,
-            "name":"EminemFN",
-            "phone":"44",
-            "img":"4.jpg",
-            "morePhones":"y"
+            "uid": 4,
+            "name": "EminemFN",
+            "phone": "456-324-9346",
+            "secondPhone": "267-445-3466",
+            "img": "4.jpg",
+            "morePhones": "y"
         },
         {
-            "uid":5,
-            "name":"KunivaFN",
-            "phone":"55",
-            "img":"5.jpg",
-            "morePhones":"n"
+            "uid": 5,
+            "name": "KunivaFN",
+            "phone": "556-162-4567",
+            "img": "5.jpg",
+            "morePhones": "n"
         },
         {
-            "uid":6,
-            "name":"DeaunPorterFN",
-            "phone":"66",
-            "img":"6.jpg",
-            "morePhones":"y"
+            "uid": 6,
+            "name": "DenaunPorterFN",
+            "phone": "564-536-5894",
+            "secondPhone": "785-856-3789",
+            "img": "6.jpg",
+            "morePhones": "y"
         }
     ]
 

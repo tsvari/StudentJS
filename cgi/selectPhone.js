@@ -7,11 +7,11 @@ http.createServer(function (req, res) {
     var filePathLocation = "../data/phone.json";
     console.log("selectPhone"); //
     // studentUid;
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.writeHead(200, {"Access-Control-Allow-Origin" : "*"});
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.writeHead(200, { "Access-Control-Allow-Origin": "*" });
     try {
-        fs.readFile(filePathLocation, function (err, data) {
-            if (fs.existsSync(filePathLocation)) {
+        if (fs.existsSync(filePathLocation)) {
+            fs.readFile(filePathLocation, function (err, data) {
                 var dataArray = JSON.parse(data);
 
                 for (let i = 0; i < dataArray.length; i++) {
@@ -22,22 +22,18 @@ http.createServer(function (req, res) {
                         if (i == dataArray.length - 1) {
                             res.write("");
                             return res.end();
-                        } else {
-                            //
                         }
                     }
                 }
-                /*
-                */
 
                 var dataToString = JSON.stringify(dataArray);
                 res.write(dataToString);
                 return res.end();
-            } else {
-                res.write("");
-                return res.end();
-            }
-        });
+            });
+        } else {
+            res.write("");
+            return res.end();
+        }
     } catch (error) {
         console.log(error); //
     }

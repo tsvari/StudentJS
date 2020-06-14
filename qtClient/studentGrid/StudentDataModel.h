@@ -2,13 +2,14 @@
 #define STUDENTDATAMODEL_H
 
 #include <QAbstractTableModel>
+class DataStore;
 
 class StudentDataModel : public QAbstractTableModel
 {
 	Q_OBJECT
 
 public:
-	explicit StudentDataModel(QObject *parent = nullptr);
+    explicit StudentDataModel(DataStore* dataStore, QObject *parent = nullptr);
 
 	// Header:
 	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -22,8 +23,7 @@ public:
 	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 	// Editable:
-	bool setData(const QModelIndex &index, const QVariant &value,
-				 int role = Qt::EditRole) override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
 	Qt::ItemFlags flags(const QModelIndex& index) const override;
 
@@ -34,6 +34,7 @@ public:
 	bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
 private:
+    DataStore* m_dataStore;
 };
 
 #endif // STUDENTDATAMODEL_H

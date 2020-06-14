@@ -1,41 +1,48 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "DataStore.h"
+
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QMessageBox>
+
+#include "DataStore.h"
+#include "StudentDataModel.h"
+#include "StudentItemDelegate.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 	, ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
-/*
-	QString RDKey = "XXXXXXXXXXXXXXXX";
-	QString WRKey = "XXXXXXXXXXXXXXXX";
-	QString CHKey = "XXXXXXXXXXXXXXXX";
-	QString CHNum = "xxxxxx";
 
-	QVariantMap feed;
-	feed.insert("uid",WRKey);
-	feed.insert("name",QVariant(tval).toString());
-	feed.insert("phone",QVariant(hval).toString());
-	feed.insert("img",Qvariant(pval).toString());
-	QByteArray payload=QJsonDocument::fromVariant(feed).toJson();
+    ui->studentTableView->setItemDelegate(new StudentItemDelegate(ui->studentTableView));
+    DataStore* dataStore = new DataStore(this);
 
-	QNetworkRequest request;
-	request.setUrl(QUrl("http://127.0.0.1:8388/"));
-	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    ui->studentTableView->setModel(new StudentDataModel(dataStore));
 
-	QNetworkAccessManager *restclient = new QNetworkAccessManager(this); //constructor
-	QNetworkReply *reply = restclient->post(request, payload);
-	qDebug() << reply->readAll();
-	*/
-	DataStore* dataSore = new DataStore(this);
-	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-	connect(manager, &QNetworkAccessManager::finished,
-			dataSore, &DataStore::replyToSelectFinished);
+    connect(dataStore, &DataStore::refreshed, [=](bool success) {
+        if(!success) {
+            QMessageBox::warning(nullptr, "Connection", "Connection failed");
+        } else {
+            // old selection model should be deleted manually
+            QItemSelectionModel* oldSelectionModel = ui->studentTableView->selectionModel();
+            // new model TODO: find way to reset model later
+            StudentDataModel* dataModel = new StudentDataModel(dataStore, ui->studentTableView);
+            ui->studentTableView->setModel(dataModel);
+            // delete here
+            delete oldSelectionModel;
 
-	manager->get(QNetworkRequest(QUrl("http://127.0.0.1:8388/")));
+            for(auto imageName: dataStore->imageMap().keys()) {
+               AsyncImageLoader* asyncImageObject = dataStore->imageMap().value(imageName);
+               int row = dataStore->indexOfImage(imageName);
+               connect(asyncImageObject, &AsyncImageLoader::imageLoadFinished, [=]() {
+                   qDebug()<<"Image update on row: "<<row;
+                   dataModel->dataChanged(dataModel->index(row, IMAGE_COLUMN_INDEX), dataModel->index(row, IMAGE_COLUMN_INDEX), {Qt::DecorationRole});
+               });
+            }
+        }
+    });
 }
 
 MainWindow::~MainWindow()
@@ -43,5 +50,13 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
+void MainWindow::on_pushButton_clicked()
+{
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
+    connect(manager, &QNetworkAccessManager::finished, DataStore::instance(), &DataStore::replyToSelectFinished);
+    connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
 
+    manager->get(QNetworkRequest(QUrl("http://127.0.0.1:8388/")));
+
+}

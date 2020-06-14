@@ -11,34 +11,36 @@
 
 class JsonBaseObject
 {
-public:
-	JsonBaseObject() = default;
-	virtual ~JsonBaseObject() = default;
-
-	struct varInfo {
-		varInfo(){}
-		varInfo(void* varAddress, uint16_t type) {
-			this->varAddress = varAddress;
-			this->type = type;
-		}
-		void *varAddress;
-		uint16_t type;
-	};
-
-	void read(QJsonObject &json) {
-		for(const QString& key: json.keys()) {
-			if(m_map.contains(key)) {
-				jsonSerilize(json, key, true);
-			}
-		}
-	}
-
-	virtual void write(QJsonObject &json) {
-		for(const QString& key: m_map.keys()) {
-			jsonSerilize(json, key, false);
-		}
-	}
 protected:
+    JsonBaseObject() = default;
+    virtual ~JsonBaseObject() = default;
+
+    enum {Read, Write};
+
+    struct varInfo {
+        varInfo(){}
+        varInfo(void* varAddress, uint16_t type) {
+            this->varAddress = varAddress;
+            this->type = type;
+        }
+        void *varAddress;
+        uint16_t type;
+    };
+
+    void read(QJsonObject &json) {
+        for(const QString& key: json.keys()) {
+            if(m_map.contains(key)) {
+                jsonSerilize(json, key, JsonBaseObject::Read);
+            }
+        }
+    }
+
+    virtual void write(QJsonObject &json) {
+        for(const QString& key: m_map.keys()) {
+            jsonSerilize(json, key, JsonBaseObject::Write);
+        }
+    }
+
 	void member(const char* varName, void* member, uint16_t type) {
 		m_map[varName] = varInfo(member, type);
 	}
@@ -48,7 +50,7 @@ protected:
 private:
 	QMap<QString, varInfo> m_map;
 
-	void jsonSerilize(QJsonObject &json, const QString &key, bool read) {
+    void jsonSerilize(QJsonObject &json, const QString &key, uint option) {
 				varInfo info = m_map.value(key);
 				QVariant value = json.value(key).toVariant();
 				switch(info.type) {
@@ -59,7 +61,7 @@ private:
 					case QMetaType::Long:
 					case QMetaType::ULong:
 					case QMetaType::UShort:
-						if(read) {
+                        if(option == Read) {
 							if(value.canConvert<int>()) {
 								*(static_cast<int*>(info.varAddress)) = value.toInt();
 							}
@@ -69,7 +71,7 @@ private:
 						break;
 					case QMetaType::Double:
 					case QMetaType::Float:
-						if(read) {
+                        if(option == Read) {
 							if(value.canConvert<double>()) {
 								*(static_cast<double*>(info.varAddress)) = value.toDouble();
 							}
@@ -78,7 +80,7 @@ private:
 						}
 						break;
 					case QMetaType::QString:
-						if(read) {
+                        if(option == Read) {
 							if(value.canConvert<QString>()) {
 								*(static_cast<QString*>(info.varAddress)) = value.toString();
 							}
@@ -87,17 +89,17 @@ private:
 						}
 						break;
 					case QMetaType::QStringList:
-						if(read) {
+                        if(option == Read) {
 							if(value.canConvert<QStringList>()) {
 								*(static_cast<QStringList*>(info.varAddress)) = value.toStringList();
 							}
-						} else { // TODO: fix this later
-							//QStringList list = *(static_cast<QStringList*>(info.varAddress));
-							//json.insert(key, );
+                        } else { // TODO: check this later
+                            QStringList list = *(static_cast<QStringList*>(info.varAddress));
+                            json.insert(key, QJsonArray::fromStringList(list));
 						}
 						break;
 					case QMetaType::QDateTime:
-						if(read) {
+                        if(option == Read) {
 							if(value.canConvert<QDateTime>()) {
 								*(static_cast<QDateTime*>(info.varAddress)) = value.toDateTime();
 							}
@@ -107,7 +109,7 @@ private:
 						}
 						break;
 					case QMetaType::QDate:
-						if(read) {
+                        if(option == Read) {
 							if(value.canConvert<QDate>()) {
 								*(static_cast<QDate*>(info.varAddress)) = value.toDate();
 							}
@@ -117,7 +119,7 @@ private:
 						}
 						break;
 					case QMetaType::QTime:
-						if(read) {
+                        if(option == Read) {
 							if(value.canConvert<QTime>()) {
 								*(static_cast<QTime*>(info.varAddress)) = value.toTime();
 							}
@@ -127,7 +129,7 @@ private:
 						}
 						break;
 				default:
-					Q_ASSERT("No meta type");
+                    Q_ASSERT("Wrong meta-type");
 					break;
 				}
 			}
@@ -140,24 +142,23 @@ public:
 		read(json);
 	}
 	Student(const Student& st) = default;
-	Student(int uid, const QString& name, const QString& image) :
+    Student(int uid, const QString& name, const QString& imageName) :
 		uid(uid),
 		name(name),
-		image(image)
+        imageName(imageName)
 	{
 		initmembers();
 	}
+
 	int uid;
 	QString name;
-	QString image;
+    QString imageName;
 
-	int nameAddress;
-	int imageAddress;
 protected:
 	void initmembers() override {
 		member("uid", static_cast<void*>(&uid), QMetaType::Int);
 		member("name", static_cast<void*>(&name), QMetaType::QString);
-		member("img", static_cast<void*>(&image), QMetaType::QString);
+        member("img", static_cast<void*>(&imageName), QMetaType::QString);
 	}
 };
 

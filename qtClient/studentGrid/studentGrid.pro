@@ -20,13 +20,17 @@ SOURCES += \
     JsonDataObject.cpp \
     StudentDataModel.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    AsyncImageLoader.cpp \
+    StudentItemDelegate.cpp
 
 HEADERS += \
     DataStore.h \
     JsonDataObject.h \
     StudentDataModel.h \
-    mainwindow.h
+    mainwindow.h \
+    AsyncImageLoader.h \
+    StudentItemDelegate.h
 
 FORMS += \
     mainwindow.ui

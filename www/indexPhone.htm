@@ -49,6 +49,16 @@
         .image2:hover {
             background-color: cyan;
         }
+
+        .mainIk {
+            opacity: 1;
+            transition: .3s ease;
+            backface-visibility: hidden;
+        }
+
+        .mainIk:hover {
+            color: blueviolet;
+        }
     </style>
     <script>
 
@@ -61,36 +71,41 @@
         // 8091 - indexPhone.js;
         // 8384 - image.js;
 
-        // mainArray.splice(iValue, 1);
-
-
         // --------------------------------------------------------------------------------VARIABLES;
-
 
         var xhttp = new XMLHttpRequest();
         var tbl = document.createElement('table');
         var mainArray = [];
         var currentRow;
         var currentFunction;
-
+        var formDivInnerHtmlSaver;
+        var addCurrentRow;
 
         // --------------------------------------------------------------------------------Function;
 
 
+        // -------------WHEN THE PROGRAM STARTS;
         function onStart() {
             document.getElementById("formDiv").style.display = "none";
-            var url = "http://localhost:8088/?studentUid=@uidNumberHere";
+            var numHere = "@uidNumberHere";
+            var url = "http://localhost:8088/?studentUid=" + numHere;
+            addCurrentRow = numHere;
             xhttp.open("GET", url, true);
 
             xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    mainArray = JSON.parse(this.responseText);
-                    fillTable();
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        mainArray = JSON.parse(this.responseText);
+                        fillTable();
+                    } else {
+                        alert("Server couldn\'t connect, try restarting website or contact us on gmail: thommaster10@gmail.com");
+                    }
                 }
             };
             xhttp.send();
         }
 
+        // -------------FILL THE MAIN TABLE;
         function fillTable() {
             tbl.innerHTML = "";
 
@@ -124,11 +139,12 @@
             }
             document.getElementById('imageDiv').appendChild(tbl);
         }
-
+        // -------------WHEN YOU CLICK ON THE DELETE BUTTON;
         function onClickDelete(iValue) {
             confirmFunc(iValue);
         }
 
+        // -------------WHEN YOU CLICK ON THE EDIT BUTTON;
         function onClickEdit(iValue) {
             currentFunction = "edit";
             currentRow = iValue;
@@ -139,45 +155,82 @@
             document.getElementById("phoneText").value = mainArray[iValue];
         }
 
+        // -------------CONFIRM  THAT YOU WANT TO DELETE THE NUMBER;
         function confirmFunc(iValue) {
-            if (confirm("Are you sure you want to delete this?")) {
+            if (confirm("Are you sure you want to delete this number?")) {
                 var url = "http://localhost:8390/?";
                 mainArray.splice(iValue, 1);
-                var param = "phoneNumber3523=" + JSON.stringify(mainArray);
+                var param = "phoneNumber3523=" + JSON.stringify(mainArray) + "&iValueCurrent=" + iValue;
                 xhttp.open("GET", url + param, true);
                 xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        fillTable();
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            fillTable();
+                        } else {
+                            alert("Server couldn\'t connect, try restarting website or contact us on gmail: thommaster10@gmail.com");
+                        }
                     }
-                }
+                };
                 xhttp.send();
             } else { }
         }
 
+        // -------------WHEN YOU CLICK ON THE ADD BUTTON;
         function onClickAdd() {
-            //
+            document.getElementById('phoneText').value = "";
+            currentFunction = "add";
+            hideShowBeforeSubmit();
+            formDivInnerHtmlSaver = document.getElementById("formDiv").innerHTML;
         }
 
+        // -------------WHEN YOU CLICK ON THE SUBMIT BUTTON;
         function onSubmit() {
-            if (currentFunction == "edit") { // 8386;
-                document.getElementById("formDiv").style.display = "none";
-                document.getElementById("imageDiv").style.display = "block";
-                document.getElementById("backDiv").style.display = "block";
+            if (currentFunction == "edit") {
+                hideShowAfterSubmit();
                 mainArray[currentRow] = document.getElementById("phoneText").value;
                 var url = "http://localhost:8386/?";
                 var param = "editFromIndexPhone35252007=" + JSON.stringify(mainArray);
                 xhttp.open("GET", url + param, true);
                 xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        fillTable();
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            fillTable();
+                        } else {
+                            alert("Server couldn\'t connect, try restarting website or contact us on gmail: thommaster10@gmail.com");
+                        }
                     }
-                }
+                };
                 xhttp.send();
             } else if (currentFunction == "add") {
-                // 8385;
-            } else {
-                // NONE;
-            }
+                hideShowAfterSubmit();
+                var newArray = document.getElementById("phoneText").value;
+                var url = "http://localhost:8385/?";
+                var param = "addNew=" + JSON.stringify(newArray) + "&type=phone&currentPart=" + addCurrentRow;
+                xhttp.open("GET", url + param, true);
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            mainArray = JSON.parse(this.responseText);
+                            fillTable();
+                        } else {
+                            alert("Server couldn\'t connect, try restarting website or contact us on gmail: thommaster10@gmail.com");
+                        }
+                    }
+                };
+                xhttp.send();
+            } else { }
+        }
+
+        function hideShowBeforeSubmit() {
+            document.getElementById("formDiv").style.display = "block";
+            document.getElementById("imageDiv").style.display = "none";
+            document.getElementById("backDiv").style.display = "none";
+        }
+
+        function hideShowAfterSubmit() {
+            document.getElementById("formDiv").style.display = "none";
+            document.getElementById("imageDiv").style.display = "block";
+            document.getElementById("backDiv").style.display = "block";
         }
     </script>
 </head>
@@ -199,20 +252,18 @@
 
 </html>
 <!-- file:///home/givi/dev/StudentJS/www/indexPhone.htm -->
-
 <!--
-
     [
         [
             1,
             "347-803-9647",
             "569-283-4656",
-            "456-234-2456"
+            "456-234-2457"
         ],
         [
             2,
             "135-546-5487",
-            "236-547-5456"
+            "259-135-3645"
         ],
         [
             3,
@@ -233,7 +284,4 @@
             "785-856-3789"
         ]
     ]
-
-    // 183;
-
 -->

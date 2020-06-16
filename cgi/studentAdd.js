@@ -1,4 +1,4 @@
-const http = require('http'); // WORKS
+const http = require('http');
 const fs = require('fs');
 const url = require('url');
 const generatorIdModule = require('./modules/logger.js');
@@ -101,5 +101,5 @@ http.createServer(function (req, res) {
     } catch (error) {
         console.log(error); //
     }
-}).listen(8385);
-console.log('Server running at http://127.0.0.1:8385/'); //
+}).listen(8086);
+console.log('Server running at http://127.0.0.1:8086/'); //

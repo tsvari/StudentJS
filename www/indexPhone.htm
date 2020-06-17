@@ -49,16 +49,6 @@
         .image2:hover {
             background-color: cyan;
         }
-
-        .mainIk {
-            opacity: 1;
-            transition: .3s ease;
-            backface-visibility: hidden;
-        }
-
-        .mainIk:hover {
-            color: blueviolet;
-        }
     </style>
     <script>
 
@@ -188,7 +178,7 @@
             if (currentFunction == "edit") {
                 hideShowAfterSubmit();
                 mainArray[currentRow] = document.getElementById("phoneText").value;
-                var url = "http://localhost:8085/?";
+                var url = "http://localhost:8088/?";
                 var param = "editFromIndexPhone35252007=" + JSON.stringify(mainArray);
                 xhttp.open("GET", url + param, true);
                 xhttp.onreadystatechange = function () {

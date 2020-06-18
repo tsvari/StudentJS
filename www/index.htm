@@ -43,16 +43,6 @@
         .image2:hover {
             background-color: cyan;
         }
-
-        .mainIk {
-            opacity: 1;
-            transition: .3s ease;
-            backface-visibility: hidden;
-        }
-
-        .mainIk:hover {
-            color: blueviolet;
-        }
     </style>
     <script>
         // -------------ToDo: FUNCTION FOR: WHEN YOU CLICK ON THE ADD MORE PHONES; (NOT USED) (SCRAPPED);
@@ -68,25 +58,14 @@
 
         // ---------------------------------------------------------------------------GLOBAL VARIABLES;
 
-        // All;
-
         var xhttp = new XMLHttpRequest();
-
-        // Users;
-
         var tbl = document.createElement('table');
         var mainArray = [];
         var currentRow;
         var addOrEditMode;
 
-        // Phone;
-
-        var mainPhoneArray;
-        var phoneTable = document.createElement('table');
-
         function onStart() {
             document.getElementById("formDiv").style.display = "none";
-            document.getElementById("addPhoneDiv").style.display = "none";
             var url = "http://localhost:8087/?";
             xhttp.open("GET", url, true);
 
@@ -132,14 +111,8 @@
                         cellText = mainArray[i].name;
                         cell.innerHTML = cellText;
                     } else if (j == 2) {
-                        if (mainArray[i].morePhones == "y") {
-                            var secondNumber = mainArray[i].secondPhone[0] + mainArray[i].secondPhone[1];
-                            cellText = "<a href=\"http://localhost:8080/?studentUid=" + mainArray[i].uid + "&type=phone\">" + mainArray[i].phone + "; " + secondNumber + "...</p>";
-                            cell.innerHTML = cellText;
-                        } else {
-                            cellText = "<a href=\"http://localhost:8080/?studentUid=" + mainArray[i].uid + "&type=phone\">" + mainArray[i].phone + "; ...</p>";
-                            cell.innerHTML = cellText;
-                        }
+                        cellText = "<a href=\"http://localhost:8080/?studentUid=" + mainArray[i].uid + "&type=phone\">" + "mobile numbers</p>";
+                        cell.innerHTML = cellText;
                     }
                     if (j == 3) {
                         var image = document.createElement("img");
@@ -172,7 +145,6 @@
             hideShowBeforeSubmit("edit");
 
             document.getElementById("nameInputId").value = mainArray[row].name;
-            document.getElementById("phoneInputId").value = mainArray[row].phone;
             currentRow = row;
         }
 
@@ -204,7 +176,6 @@
         function sendInfoAfterEdit() {
             var newArray = mainArray[currentRow];
             newArray.name = document.getElementById("nameInputId").value;
-            newArray.phone = document.getElementById("phoneInputId").value;
             hideShowAfterSubmit();
             var url = "http://localhost:8085/?";
             var param = "edit=" + JSON.stringify(newArray);
@@ -224,7 +195,7 @@
 
         // -------------SEND INFORMATION AFTER ADD FUNCTION;
         function sendInfoAfterAdd() {
-            var newArray = { "uid": -1, "name": document.getElementById("nameInputId").value, "phone": document.getElementById("phoneAddId").value, "secondPhone": "", "img": "1.jpg", "morePhones": "n" };
+            var newArray = { "uid": -1, "name": document.getElementById("nameInputId").value, "img": "1.jpg" };
 
             hideShowAfterSubmit();
             var url = "http://localhost:8086/?";
@@ -256,14 +227,7 @@
         function hideShowBeforeSubmit(index) {
             document.getElementById("formDiv").style.display = "block";
             document.getElementById("imageDiv").style.display = "none";
-            if (index == "add") {
-                document.getElementById("addPhoneDiv").style.display = "block";
-                document.getElementById("firstFromTheListPhone").style.display = "none";
-                document.getElementById("phoneAddId").value = "";
-            }
-
             document.getElementById("nameInputId").value = "";
-            document.getElementById("phoneInputId").value = "";
         }
 
         // --------------HIDE OR SHOW AFTER SUBMITTED FUNCTION;
@@ -271,7 +235,6 @@
             document.getElementById("formDiv").style.display = "none";
             document.getElementById("imageDiv").style.display = "block";
             document.getElementById("nameInputId").value = "";
-            document.getElementById("phoneInputId").value = "";
         }
     </script>
 </head>
@@ -286,73 +249,43 @@
     </div>
     <div id="formDiv">
         <p> name: &nbsp;<input type="text" id="nameInputId"> </p>
-        <div id="firstFromTheListPhone">
-            <p> phone: <input type="text" id="phoneInputId"> (first from the list) </p>
-        </div>
-        <div id="addPhoneDiv">
-            <p> phone: <input type="text" id="phoneAddId"> <i class="mainIk" onclick="addMorePhones()">(Add More)</i>
-            </p>
-        </div>
         <button id="afterEditButton" onclick="onClickSubmitButton()">Submit</button>
-    </div>
-    <div id="phoneTableDiv">
-        <!-- / -->
     </div>
 </body>
 
 </html>
-
-<!-- file:///home/givi/dev/StudentJS/www/index.htm -->
 
 <!--
     [
         {
             "uid": 1,
             "name": "BugzFN",
-            "phone": "347-803-9647",
-            "secondPhone": "569-283-4656",
-            "img": "1.jpg",
-            "morePhones": "y"
+            "img": "1.jpg"
         },
         {
             "uid": 2,
             "name": "ProofFN",
-            "phone": "135-546-5487",
-            "secondPhone": "259-135-3645",
-            "img": "2.jpg",
-            "morePhones": "y"
+            "img": "2.jpg"
         },
         {
             "uid": 3,
             "name": "BizarreFN",
-            "phone": "237-457-8658",
-            "secondPhone": null,
-            "img": "3.jpg",
-            "morePhones": "n"
+            "img": "3.jpg"
         },
         {
             "uid": 4,
             "name": "EminemFN",
-            "phone": "456-324-9346",
-            "secondPhone": "267-445-3466",
-            "img": "4.jpg",
-            "morePhones": "y"
+            "img": "4.jpg"
         },
         {
             "uid": 5,
             "name": "KunivaFN",
-            "phone": "556-162-4567",
-            "secondPhone": "",
-            "img": "5.jpg",
-            "morePhones": "n"
+            "img": "5.jpg"
         },
         {
             "uid": 6,
             "name": "DenaunPorterFN",
-            "phone": "564-536-5894",
-            "secondPhone": "785-856-3789",
-            "img": "6.jpg",
-            "morePhones": "y"
+            "img": "6.jpg"
         }
     ]
 -->

@@ -29,7 +29,7 @@ http.createServer(function (req, res) {
             }
         } else if (infoFromURL.type == "content") {
             var contentTypeName = infoFromURL.img;
-            var filePathLocation = contentImagePath + contentTypeName + "-icon.png";
+            var filePathLocation = contentImagePath + contentTypeName;
             if (fs.existsSync(filePathLocation)) {
                 fs.readFile(filePathLocation, function (err, data) {
                     res.write(data);
@@ -48,7 +48,7 @@ http.createServer(function (req, res) {
     } catch (error) {
         console.log("error: " + error); //
     }
-}).listen(8384);
-console.log('Server running at http://127.0.0.1:8384/'); //
+}).listen(8082);
+console.log('Server running at http://127.0.0.1:8082/'); //
 
-// http://localhost:8384/?img=1.jpg or noimage.jpg
+// http://localhost:8082/?img=1.jpg or noimage.jpg

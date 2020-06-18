@@ -194,8 +194,8 @@
             } else if (currentFunction == "add") {
                 hideShowAfterSubmit();
                 var newArray = document.getElementById("phoneText").value;
-                var url = "http://localhost:8086/?";
-                var param = "addNew=" + JSON.stringify(newArray) + "&type=phone&currentPart=" + addCurrentRow;
+                var url = "http://localhost:8089/?";
+                var param = "addNew=" + JSON.stringify(newArray) + "&currentPart=" + addCurrentRow;
                 xhttp.open("GET", url + param, true);
                 xhttp.onreadystatechange = function () {
                     if (this.readyState == 4) {
@@ -241,7 +241,7 @@
 </body>
 
 </html>
-<!-- file:///home/givi/dev/StudentJS/www/indexPhone.htm -->
+
 <!--
     [
         [

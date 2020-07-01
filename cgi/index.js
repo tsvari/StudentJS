@@ -21,10 +21,16 @@ app.get('/', function (req, res) {
         console.log("indexPhone"); //
         var indexFilePath = path.join(__dirname, "../www", "indexPhone.htm");
         fs.readFile(indexFilePath, 'utf-8', function (err, data) {
-            var dataToString = data.toString();
-            var replaced = dataToString.replace('@uidNumberHere', infoFromURL.studentUid);
-            res.write(replaced);
-            return res.end();
+            if (err) {
+                console.error(err); //
+                res.send("Error to finding index file");
+                return;
+            } else {
+                var dataToString = data.toString();
+                var replaced = dataToString.replace('@uidNumberHere', infoFromURL.studentUid);
+                res.write(replaced);
+                return res.end();
+            }
         });
     } else {
         console.log("error"); //

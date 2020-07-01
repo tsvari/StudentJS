@@ -1,6 +1,8 @@
-var fs = require('fs');
+const fs = require('fs');
+const path = require('path');
 exports.generatorInfo = function () {
-    var newUID = fs.readFileSync('idGenerator.txt', 'utf8');
+    var idGeneratorFileLocation = path.join(__dirname, "../", "idGenerator.txt");
+    var newUID = fs.readFileSync(idGeneratorFileLocation, 'utf8');
     newUID = parseInt(newUID) + 1;
     // fs.writeFileSync('idGenerator.txt', newUID);
     return newUID;

@@ -14,7 +14,7 @@ http.createServer(function (req, res) {
             fs.readFile(filePathLocation, function (err, data) {
                 var dataArray = JSON.parse(data);
                 for (let i = 0; i < dataArray.length; i++) {
-                    if (infoFromURL.studentUid == dataArray[i][0]) {
+                    if (infoFromURL.studentUid == dataArray[i].student_uid) {
                         dataArray = dataArray[i];
                         break;
                     } else {

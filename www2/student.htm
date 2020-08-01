@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            border: 1px solid #dddddd;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        table tr:hover {
+            background-color: #00ffff8a;
+        }
+
+        table td:hover {
+            background-color: #00ffff8a;
+            text-emphasis-color: #00ffff8a;
+        }
+
+        .image {
+            opacity: 1;
+            transition: .4s ease;
+            backface-visibility: hidden;
+        }
+
+        .image:hover {
+            background-color: black;
+        }
+
+        .image2 {
+            opacity: 1;
+            transition: .4s ease;
+            backface-visibility: hidden;
+        }
+
+        .image2:hover {
+            background-color: cyan;
+        }
+    </style>
+    <script>
+        //onload="onStart()"
+        // localhost:8080/?infoType=form
+
+        var xhttp = new XMLHttpRequest();
+        var tbl = document.createElement('table');
+        var mainArray = [];
+        var currentRow;
+        var addOrEditMode;
+
+        function onStart() {
+            var url = "http://localhost:8080/?uid=2&infoType=data";
+            xhttp.open("GET", url, true)
+
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        mainArray = JSON.parse(this.responseText);
+                        fillTable();
+                    } else {
+                        alert("Server couldn\'t connect, try restarting website or contact us on gmail: thommaster10@gmail.com");
+                    }
+                }
+            };
+            xhttp.send();
+        }
+
+
+
+        function fillTable() {
+            tbl.innerHTML = "";
+
+            var headerArray = ["UID", "Name", "Phone", "edit"];
+            var headerRow = document.createElement("tr");
+            for (var i = 0; i < headerArray.length; i++) {
+                var cell = document.createElement("td");
+                var cellText = headerArray[i];
+                cell.innerHTML = cellText;
+                headerRow.appendChild(cell);
+            }
+            tbl.appendChild(headerRow);
+
+
+            for (var i = 0; i < mainArray.length; i++) {
+                var row = document.createElement("tr");
+                for (var j = 0; j < 4; j++) {
+                    var cell = document.createElement("td");
+                    var cellText = "";
+                    if (j == 0) {
+                        cellText = mainArray[i].uid;
+                        cell.innerHTML = cellText;
+                    } else if (j == 1) {
+                        cellText = mainArray[i].name;
+                        cell.innerHTML = cellText;
+                    } else if (j == 2) {
+                        cellText = "<a href=\"http://localhost:8080/?uid=" + mainArray[i].uid + "&type=phone\">" + "mobile numbers</p>";
+                        cell.innerHTML = cellText;
+                    } else if (j == 3) {
+                        cellText = "<p> <a href=\"http://localhost:8080/?infoType=form&editType=edit&uid=" + mainArray[i].uid + "\"> <img src=\"http://localhost:8082/?img=edit-icon.png&type=content\" class=\"image\" height=\"30\" size=\"30\" alt=\"edit\" onclick=\"onClickEdit(" + i + ")\"> </a>";
+                        cell.innerHTML = cellText;
+                    }
+                    row.appendChild(cell);
+                }
+                tbl.appendChild(row);
+            }
+            document.getElementById('imageDiv').appendChild(tbl);
+        }
+
+        function onClickEdit() {
+            //
+        }
+    </script>
+</head>
+
+<body onload="onStart()">
+    <a href="localhost:8080/?infoType=form&editType=add"> <button id="addButton"> add new </button> </a>
+    <div id="imageDiv"></div>
+</body>
+
+</html>

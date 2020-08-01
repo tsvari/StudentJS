@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            border: 1px solid #dddddd;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        table tr:hover {
+            background-color: #00ffff8a;
+        }
+
+        table td:hover {
+            background-color: #00ffff8a;
+            text-emphasis-color: #00ffff8a;
+        }
+
+        .image {
+            opacity: 1;
+            transition: .4s ease;
+            backface-visibility: hidden;
+        }
+
+        .image:hover {
+            background-color: black;
+        }
+
+        .image2 {
+            opacity: 1;
+            transition: .4s ease;
+            backface-visibility: hidden;
+        }
+
+        .image2:hover {
+            background-color: cyan;
+        }
+    </style>
+    <script>
+        var xhttp = new XMLHttpRequest();
+        function onStart() {
+            // document.getElementById("demo").innerHTML = sentArray;
+            var url = "http://localhost:8080/?uid=@uidValue";
+            xhttp.open("GET", url, true);
+
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        var mainArray = JSON.parse(this.responseText);
+                        var currentUidInfo = document.getElementById("uid").value;
+                        for (let i = 0; i < mainArray.length; i++) {
+                            //
+                        }
+                        // document.getElementById("uid").value = mainArray.uid;
+                    } else {
+                        alert("Server couldn\'t connect, try restarting website or contact us on gmail: thommaster10@gmail.com");
+                    }
+                }
+            };
+            xhttp.send();
+        }
+
+        function sendJSON() {
+            let nameValue = document.querySelector('#name').value;
+            let uidValue = document.querySelector('#uid').value;
+            var errorCode;
+            // Creating a XHR object;
+            let xhr = new XMLHttpRequest();
+            let url = "http://localhost:8080/";
+
+            // open a connection;
+            xhr.open("POST", url, true);
+
+            // Set the request header i.e. which type of content you are sending;
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+            // Create a state change callback;
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var sentInfo = this.responseText;
+                        var newArray = JSON.parse(sentInfo);
+                        var demoInfo = "First Name: " + newArray.name + ", Last Name: " + newArray.uid;
+                        // document.getElementById('demo').innerHTML = demoInfo;
+
+                        // document.getElementById('formDiv').style.display = "none";
+                        // document.getElementById('textDiv').style.display = "block";
+
+                        // go to  http://localhost:8080/
+                    } else {
+                        alert("Connection to server failed, try again later!");
+                    }
+                }
+            };
+            // Sending data with the request;
+            var dataObject = {
+                name: nameValue,
+                uid: uidValue
+            };
+
+            xhr.send(JSON.stringify(dataObject));
+        }
+    </script>
+</head>
+
+<body onload="onStart()">
+    <form action="javascript:sendJSON()">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br><br>
+        <input type="hidden" id="editType" name="editType" value=@editType>
+        <input type="text" id="uid" name="uid" value="@uidValue">
+        <a href="http://localhost:8080/"> <input type="submit" value="Submit"> </a>
+        <p id="demo"></p>
+    </form>
+</body>
+
+</html>

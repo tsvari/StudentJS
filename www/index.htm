@@ -55,7 +55,7 @@
 
         function onStart() {
             document.getElementById("formDiv").style.display = "none";
-            var url = "http://localhost:8087/?";
+            var url = "http://localhost:8080/?";
             xhttp.open("GET", url, true);
 
             xhttp.onreadystatechange = function () {
@@ -108,7 +108,7 @@
                         image.alt = "Image";
                         image.width = "150";
                         image.height = "100";
-                        image.src = "http://localhost:8082/?img=" + mainArray[i].img + "&type=data";
+                        image.src = "http://localhost:8082/?img=" + mainArray[i].img + "&type=all";
                         cell.appendChild(image);
                     } else if (j == 4) {
                         cellText = "<p> <img src=\"http://localhost:8082/?img=edit-icon.png&type=content\" class=\"image\" height=\"30\" size=\"30\" alt=\"edit\" onclick=\"onClickEdit(" + i + ")\"> ";
@@ -238,8 +238,6 @@
     </div>
 </body>
 
-</html>
-
 <!--
     [
         {
@@ -274,3 +272,5 @@
         }
     ]
 -->
+
+</html>

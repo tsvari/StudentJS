@@ -7,3 +7,4 @@ exports.generatorInfo = function () {
     // fs.writeFileSync('idGenerator.txt', newUID);
     return newUID;
 };
+

@@ -2,10 +2,9 @@
 #include "DataStore.h"
 
 
-
 StudentDataModel::StudentDataModel(DataStore* dataStore, QObject *parent)
     : QAbstractTableModel(parent),
-      m_dataStore(dataStore)
+	  _dataStore(dataStore)
 {
 }
 
@@ -20,13 +19,13 @@ QVariant StudentDataModel::headerData(int section, Qt::Orientation orientation, 
             case 1:
                 return "Name";
                 break;
-            case IMAGE_COLUMN_INDEX:
+			case ImageColumnIndex:
                 return "Image";
                 break;
             }
-        } else if (orientation == Qt::Vertical) {
-            return section + 1;
-        }
+		} else if (orientation == Qt::Vertical) {
+			return section + 1;
+		}
     }
 	return {};
 }
@@ -46,7 +45,7 @@ int StudentDataModel::rowCount(const QModelIndex &parent) const
 	if (parent.isValid())
 		return 0;
 
-    return m_dataStore->studentList().size();
+	return _dataStore->studentList().size();
 }
 
 int StudentDataModel::columnCount(const QModelIndex &parent) const
@@ -62,38 +61,41 @@ QVariant StudentDataModel::data(const QModelIndex &index, int role) const
 	if (!index.isValid())
         return {};
 
-    if(index.row() <= m_dataStore->size()) {
-        Student st = m_dataStore->student(index.row());
-        switch(role) {
-            case Qt::DisplayRole: {
-                switch(index.column()) {
-                    case 0:
-                        return st.uid;
-                        break;
-                    case 1:
-                        return st.name;
-                        break;
-                    }
-                }
-                break;
-            case Qt::DecorationRole:
-                if(index.column() == IMAGE_COLUMN_INDEX) {
-                    QImage image = m_dataStore->image(index.row());
-                    if(!image.isNull()) {
-                        return m_dataStore->image(index.row());
-                    }
-                }
-                break;
-            }
-    }
+	if(index.row() >= _dataStore->size() || index.row() < 0) {
+		return {};
+	}
+
+	Student st = _dataStore->student(index.row());
+	switch(role) {
+		case Qt::EditRole:
+		case Qt::DisplayRole: {
+			switch(index.column()) {
+				case 0:
+					return st.uid;
+					break;
+				case 1:
+					return st.name;
+					break;
+				}
+			}
+			break;
+		case Qt::DecorationRole:
+			if(index.column() == ImageColumnIndex) {
+				QImage image = _dataStore->image(index.row());
+				if(!image.isNull()) {
+					return _dataStore->image(index.row());
+				}
+			}
+			break;
+		}
+
     return {};
 }
 
 bool StudentDataModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
 	if (data(index, role) != value) {
-		// FIXME: Implement me!
-		emit dataChanged(index, index, QVector<int>() << role);
+		_dataStore->update(index, value);
 		return true;
 	}
 	return false;
@@ -110,7 +112,7 @@ Qt::ItemFlags StudentDataModel::flags(const QModelIndex &index) const
 bool StudentDataModel::insertRows(int row, int count, const QModelIndex &parent)
 {
 	beginInsertRows(parent, row, row + count - 1);
-	// FIXME: Implement me!
+		_dataStore->append();
 	endInsertRows();
 
 	return true;
@@ -119,10 +121,11 @@ bool StudentDataModel::insertRows(int row, int count, const QModelIndex &parent)
 bool StudentDataModel::removeRows(int row, int count, const QModelIndex &parent)
 {
 	beginRemoveRows(parent, row, row + count - 1);
-	// FIXME: Implement me!
+		_dataStore->remove(row);
 	endRemoveRows();
 
 	return true;
 }
+
 
 

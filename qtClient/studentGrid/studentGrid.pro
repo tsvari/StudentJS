@@ -19,6 +19,8 @@ SOURCES += \
     DataStore.cpp \
     JsonDataObject.cpp \
     StudentDataModel.cpp \
+    StudentForm.cpp \
+    StudentTableView.cpp \
     main.cpp \
     mainwindow.cpp \
     AsyncImageLoader.cpp \
@@ -28,12 +30,15 @@ HEADERS += \
     DataStore.h \
     JsonDataObject.h \
     StudentDataModel.h \
+    StudentForm.h \
+    StudentTableView.h \
     mainwindow.h \
     AsyncImageLoader.h \
     StudentItemDelegate.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    studentform.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

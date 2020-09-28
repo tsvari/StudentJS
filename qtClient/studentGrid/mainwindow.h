@@ -5,6 +5,7 @@
 
 class QNetworkReply;
 class QNetworkAccessManager;
+class QDataWidgetMapper;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

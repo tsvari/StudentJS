@@ -18,7 +18,7 @@ StudentItemDelegate::StudentItemDelegate(QObject *parent) : QStyledItemDelegate(
 
 void StudentItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt, const QModelIndex &index) const
 {
-    if(index.column() == IMAGE_COLUMN_INDEX) {
+    if(index.column() == ImageColumnIndex) {
         QVariant imageData = index.data(Qt::DecorationRole);
         if(imageData.isValid()) {
             QImage image;
@@ -31,7 +31,7 @@ void StudentItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     QStyledItemDelegate::paint(painter, opt, index);
 
 }
-
+/*
 QWidget *StudentItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	Q_UNUSED(option)
@@ -55,4 +55,4 @@ QSize StudentItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
     // TODO: write code
 	return QStyledItemDelegate::sizeHint(option, index);
 }
-
+*/

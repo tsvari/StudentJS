@@ -3,7 +3,6 @@
 
 #include <QAbstractTableModel>
 class DataStore;
-
 class StudentDataModel : public QAbstractTableModel
 {
 	Q_OBJECT
@@ -34,7 +33,7 @@ public:
 	bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
 private:
-    DataStore* m_dataStore;
+	DataStore* _dataStore;
 };
 
 #endif // STUDENTDATAMODEL_H

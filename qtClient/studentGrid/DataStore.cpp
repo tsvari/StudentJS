@@ -5,6 +5,7 @@
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QDebug>
+#include <QModelIndex>  
 
 #include "AsyncImageLoader.h"
 
@@ -16,7 +17,14 @@ DataStore::DataStore(QObject* parent) : QObject(parent)
 
 QImage DataStore::image(int row)
 {
-    return m_imageMap[m_jsonStudentArray.at(row).imageName]->image();
+	if(m_jsonStudentArray.size()<=row) {
+		return {};
+	}
+	const QString imageName = m_jsonStudentArray.at(row).imageName;
+	if(!m_imageMap.contains(imageName)) {
+		return {};
+	}
+	return m_imageMap[imageName]->image();
 }
 
 int DataStore::indexOfImage(const QString &imageName)
@@ -27,7 +35,23 @@ int DataStore::indexOfImage(const QString &imageName)
             return i;
         }
     }
-    return -1;
+	return -1;
+}
+
+bool DataStore::update(const QModelIndex &index, const QVariant &value)
+{
+	if(!index.isValid() || index.row() >= m_jsonStudentArray.size() || index.column() >1) {
+		return false;
+	}
+
+	Student student = m_jsonStudentArray.at(index.row());
+	if(index.column() == 0) {
+		student.uid = value.toInt();
+	} else if(index.column() == 1) {
+		student.name = value.toString();
+	}
+
+	m_jsonStudentArray.replace(index.row(), student);
 }
 
 void DataStore::replyToSelectFinished(QNetworkReply *reply)
@@ -53,7 +77,7 @@ void DataStore::replyToSelectFinished(QNetworkReply *reply)
         Student st(js);
         m_jsonStudentArray.push_back(st);
 
-        QUrl url("http://127.0.0.1:8384/?type=data&img=" + st.imageName);
+		QUrl url("http://127.0.0.1:8082/?type=data&img=" + st.imageName);
 
         AsyncImageLoader* imgLoader = new AsyncImageLoader(this, url, st.imageName);
         imgLoader->loadImage();

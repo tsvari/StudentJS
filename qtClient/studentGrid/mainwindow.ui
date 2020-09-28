@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>20</y>
+      <x>230</x>
+      <y>30</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -27,7 +27,7 @@
      <string>Refrsh</string>
     </property>
    </widget>
-   <widget class="QTableView" name="studentTableView">
+   <widget class="StudentTableView" name="studentTableView">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -35,6 +35,19 @@
       <width>691</width>
       <height>361</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="insertNew">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>50</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>insert</string>
     </property>
    </widget>
   </widget>
@@ -50,6 +63,13 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>StudentTableView</class>
+   <extends>QTableView</extends>
+   <header location="global">StudentTableView.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

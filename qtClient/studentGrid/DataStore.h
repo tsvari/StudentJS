@@ -6,7 +6,9 @@
 #include "AsyncImageLoader.h"
 
 namespace {
-    const int IMAGE_COLUMN_INDEX = 2;
+	const int ImageColumnIndex = 2;
+
+	enum EditMode{Insert = 0, Update = 1};
 }
 
 class QNetworkReply;
@@ -18,13 +20,18 @@ class DataStore : public QObject
 	Q_OBJECT
 public:
     static DataStore* instance() { return m_instance; }
-    QList<Student>& studentList() { return m_jsonStudentArray; }
-    QImage image(int row);
-    int indexOfImage(const QString& imageName);
-    int size() {return m_jsonStudentArray.size();}
-    Student student(int row) {return m_jsonStudentArray.at(row);}
-    //AsyncImageLoader* asyncImage(const QString& imageName) {return m_imageMap[imageName];}
-    QMap<QString, AsyncImageLoader*>& imageMap() {return m_imageMap;}
+
+	inline int size() {return m_jsonStudentArray.size();}
+	inline Student student(int row) {return m_jsonStudentArray.at(row);}
+	inline QMap<QString, AsyncImageLoader*>& imageMap() {return m_imageMap;}
+	inline QList<Student>& studentList() { return m_jsonStudentArray; }
+
+	QImage image(int row);
+	int indexOfImage(const QString& imageName);
+
+	bool update(const QModelIndex &index, const QVariant &value);
+	void append(){m_jsonStudentArray.push_back(Student(-1,"",""));}
+	void remove(int row){m_jsonStudentArray.removeAt(row);}
 
     friend class MainWindow;
 
